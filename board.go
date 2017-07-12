@@ -29,6 +29,8 @@ func BoardState(board [][]bool) [][]bool {
 	nextBoard := make([][]bool, len(board))
 
 	for i := 0; i < len(board); i++ {
+		nextBoard[i] = make([]bool, len(board[i]))
+
 		for j := 0; j < len(board[i]); j++ {
 			nextBoard[i][j] = CellState(board, i, j)
 		}

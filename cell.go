@@ -7,7 +7,7 @@ func CellState(board [][]bool, x, y int) bool {
 	for i := x - 1; i <= x+1; i++ {
 		for j := y - 1; j <= y+1; j++ {
 			var currentX = getIndex(i, len(board))
-			var currentY = getIndex(j, len(board[i]))
+			var currentY = getIndex(j, len(board[currentX]))
 
 			if board[currentX][currentY] {
 				numNeighbors++

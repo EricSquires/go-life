@@ -35,6 +35,7 @@ func main() {
 
 	for i := 0; i < 60; i++ {
 		draw(board)
+		board = BoardState(board)
 		time.Sleep(pauseDuration)
 	}
 }
