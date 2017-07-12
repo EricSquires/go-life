@@ -9,7 +9,8 @@ func CellState(board [][]bool, x, y int) bool {
 			var currentX = getIndex(i, len(board))
 			var currentY = getIndex(j, len(board[currentX]))
 
-			if board[currentX][currentY] {
+			// Only increment if we're not looking at the current cell (that's not a neighbor no matter how lonely it is)
+			if board[currentX][currentY] && !(currentX == x && currentY == y) {
 				numNeighbors++
 			}
 		}
