@@ -5,34 +5,39 @@ import (
 	"time"
 )
 
+// Board represents a game of life board
+type Board struct {
+	Width, Height int
+	Cells         [][]Cell
+}
+
 // InitBoard sets up the initial state for a blank life board
-func InitBoard(width, height int) [][]bool {
+func InitBoard(width, height int) Board {
 	rand.Seed(time.Now().Unix())
 
-	var cells = make([][]bool, width)
+	var cells = make([][]Cell, width)
+	board := Board{width, height, cells}
 
 	for i := 0; i < width; i++ {
-		cells[i] = make([]bool, height)
+		cells[i] = make([]Cell, height)
 
 		for j := 0; j < height; j++ {
-			if rand.Float32() <= 0.3 {
-				cells[i][j] = true
-			}
+			cells[i][j] = Cell{i, j, rand.Float32() <= 0.3}
 		}
 	}
 
-	return cells
+	return board
 }
 
-// BoardState returns the next state of all cells in the board
-func BoardState(board [][]bool) [][]bool {
-	nextBoard := make([][]bool, len(board))
+// NextState returns the next state of all cells in the board
+func (b Board) NextState() Board {
+	nextBoard := Board{b.Width, b.Height, make([][]Cell, b.Width)}
 
-	for i := 0; i < len(board); i++ {
-		nextBoard[i] = make([]bool, len(board[i]))
+	for i := 0; i < nextBoard.Width; i++ {
+		nextBoard.Cells[i] = make([]Cell, b.Height)
 
-		for j := 0; j < len(board[i]); j++ {
-			nextBoard[i][j] = CellState(board, i, j)
+		for j := 0; j < nextBoard.Height; j++ {
+			nextBoard.Cells[i][j] = Cell{i, j, b.Cells[i][j].NextState(b.Cells)}
 		}
 	}
 

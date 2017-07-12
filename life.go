@@ -13,12 +13,12 @@ func clear() {
 	print("\033[H\033[2J")
 }
 
-func draw(board [][]bool) {
+func draw(board Board) {
 	clear()
 
-	for i := 0; i < len(board); i++ {
-		for j := 0; j < len(board[i]); j++ {
-			if board[i][j] {
+	for i := 0; i < board.Width; i++ {
+		for j := 0; j < board.Height; j++ {
+			if board.Cells[i][j].IsAlive {
 				print(aliveChar)
 			} else {
 				print(deadChar)
@@ -35,7 +35,7 @@ func main() {
 
 	for i := 0; i < 60; i++ {
 		draw(board)
-		board = BoardState(board)
+		board = board.NextState()
 		time.Sleep(pauseDuration)
 	}
 }

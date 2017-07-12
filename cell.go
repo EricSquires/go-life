@@ -1,23 +1,29 @@
 package main
 
-// CellState returns the next state for the given cell
-func CellState(board [][]bool, x, y int) bool {
+// Cell represents a single cell in a game of life board
+type Cell struct {
+	X, Y    int
+	IsAlive bool
+}
+
+// NextState returns the next state for the given cell
+func (c Cell) NextState(cells [][]Cell) bool {
 	var numNeighbors int
 
-	for i := x - 1; i <= x+1; i++ {
-		for j := y - 1; j <= y+1; j++ {
-			var currentX = getIndex(i, len(board))
-			var currentY = getIndex(j, len(board[currentX]))
+	for i := c.X - 1; i <= c.X+1; i++ {
+		for j := c.Y - 1; j <= c.Y+1; j++ {
+			var currentX = getIndex(i, len(cells))
+			var currentY = getIndex(j, len(cells[currentX]))
 
 			// Only increment if we're not looking at the current cell (that's not a neighbor no matter how lonely it is)
-			if board[currentX][currentY] && !(currentX == x && currentY == y) {
+			if cells[currentX][currentY].IsAlive && !(currentX == c.X && currentY == c.Y) {
 				numNeighbors++
 			}
 		}
 	}
 
 	// 3 neighbors always results in life, 2 only results in life if the cell was already alive to begin with
-	return numNeighbors == 3 || (board[x][y] && numNeighbors == 2)
+	return numNeighbors == 3 || (cells[c.X][c.Y].IsAlive && numNeighbors == 2)
 }
 
 func getIndex(n, limit int) int {
