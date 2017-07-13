@@ -1,7 +1,9 @@
 package main
 
 import (
+	"io/ioutil"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -41,6 +43,43 @@ func InitBoardRandom(width, height int, chanceAlive float32) Board {
 
 		for j := 0; j < height; j++ {
 			cells[i][j] = Cell{i, j, rand.Float32() <= chanceAlive}
+		}
+	}
+
+	return board
+}
+
+// LoadFromFile parses a file and creates an identical Board based on the file
+func LoadFromFile(path string) Board {
+	boardData, err := ioutil.ReadFile(path)
+
+	if err != nil {
+		panic(err)
+	}
+
+	boardString := strings.Split(strings.TrimSpace(string(boardData)), "\n")
+
+	width := strings.TrimSpace(boardString[0])
+	board := Board{len(width), len(boardString), make([][]Cell, len(width))}
+
+	for i := 0; i < board.Width; i++ {
+		board.Cells[i] = make([]Cell, board.Height)
+
+		for j := 0; j < board.Height; j++ {
+			var isAlive bool
+			currentChar := string(boardString[i][j])
+
+			if strings.TrimSpace(currentChar) == "" {
+				continue
+			}
+
+			if currentChar == AliveChar || currentChar == AliveAltChar {
+				isAlive = true
+			} else if currentChar != DeadChar && currentChar != DeadAltChar {
+				panic("Unrecognized character found in board definition: '" + currentChar + "'")
+			}
+
+			board.Cells[i][j] = Cell{i, j, isAlive}
 		}
 	}
 
