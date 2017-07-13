@@ -22,7 +22,25 @@ func InitBoard(width, height int) Board {
 		cells[i] = make([]Cell, height)
 
 		for j := 0; j < height; j++ {
-			cells[i][j] = Cell{i, j, rand.Float32() <= 0.3}
+			cells[i][j] = Cell{i, j, false}
+		}
+	}
+
+	return board
+}
+
+// InitBoardRandom sets up a Board with each cell having the given chance to have its starting state set to alive
+func InitBoardRandom(width, height int, chanceAlive float32) Board {
+	rand.Seed(time.Now().Unix())
+
+	var cells = make([][]Cell, width)
+	board := Board{width, height, cells}
+
+	for i := 0; i < width; i++ {
+		cells[i] = make([]Cell, height)
+
+		for j := 0; j < height; j++ {
+			cells[i][j] = Cell{i, j, rand.Float32() <= chanceAlive}
 		}
 	}
 
